@@ -1,5 +1,6 @@
 
 import { query, getConnection } from '../utils/db';
+import { OkPacket, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 
 export interface OrderItem {
   id?: number;
@@ -20,23 +21,23 @@ export interface Order {
 }
 
 export async function getAllOrders() {
-  return query(
+  return query<RowDataPacket[]>(
     'SELECT * FROM orders ORDER BY order_date DESC'
   );
 }
 
 export async function getOrderById(id: number) {
-  const orders = await query('SELECT * FROM orders WHERE id = ?', [id]);
+  const orders = await query<RowDataPacket[]>('SELECT * FROM orders WHERE id = ?', [id]);
   if (orders.length === 0) return null;
   
-  const items = await query('SELECT * FROM order_items WHERE order_id = ?', [id]);
+  const items = await query<RowDataPacket[]>('SELECT * FROM order_items WHERE order_id = ?', [id]);
   orders[0].items = items;
   
   return orders[0];
 }
 
 export async function getOrdersByUserId(userId: number) {
-  return query('SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC', [userId]);
+  return query<RowDataPacket[]>('SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC', [userId]);
 }
 
 export async function createOrder(order: Order, items: OrderItem[]) {
@@ -46,16 +47,16 @@ export async function createOrder(order: Order, items: OrderItem[]) {
   
   try {
     // Insert order
-    const orderResult = await conn.execute(
+    const [orderResult] = await conn.execute<ResultSetHeader>(
       'INSERT INTO orders (user_id, restaurant_id, status, total_amount) VALUES (?, ?, ?, ?)',
       [order.user_id, order.restaurant_id, order.status, order.total_amount]
     );
     
-    const orderId = orderResult[0].insertId;
+    const orderId = orderResult.insertId;
     
     // Insert order items
     for (const item of items) {
-      await conn.execute(
+      await conn.execute<ResultSetHeader>(
         'INSERT INTO order_items (order_id, dish_id, quantity, price) VALUES (?, ?, ?, ?)',
         [orderId, item.dish_id, item.quantity, item.price]
       );
@@ -72,5 +73,5 @@ export async function createOrder(order: Order, items: OrderItem[]) {
 }
 
 export async function updateOrderStatus(id: number, status: Order['status']) {
-  return query('UPDATE orders SET status = ? WHERE id = ?', [status, id]);
+  return query<OkPacket>('UPDATE orders SET status = ? WHERE id = ?', [status, id]);
 }

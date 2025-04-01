@@ -19,11 +19,11 @@ export async function getConnection() {
   return pool;
 }
 
-// Helper function to execute queries
-export async function query(sql: string, params?: any[]) {
+// Helper function to execute queries with generic type support
+export async function query<T>(sql: string, params?: any[]): Promise<T> {
   try {
     const conn = await getConnection();
-    const [results] = await conn.execute(sql, params);
+    const [results] = await conn.execute<T>(sql, params);
     return results;
   } catch (error) {
     console.error('Database query error:', error);
