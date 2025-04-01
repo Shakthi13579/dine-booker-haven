@@ -1,5 +1,5 @@
 
-import { query } from '../utils/db';
+import { query, getConnection } from '../utils/db';
 
 export interface OrderItem {
   id?: number;
