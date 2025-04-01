@@ -4,6 +4,7 @@ import Index from "./pages/Index";
 import RestaurantsPage from "./pages/RestaurantsPage";
 import RestaurantDetail from "./pages/RestaurantDetail";
 import SpecialOffersPage from "./pages/SpecialOffersPage";
+import DatabaseViewerPage from "./pages/DatabaseViewerPage";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path="/restaurants" element={<RestaurantsPage />} />
         <Route path="/restaurants/:id" element={<RestaurantDetail />} />
         <Route path="/special-offers" element={<SpecialOffersPage />} />
+        <Route path="/database" element={<DatabaseViewerPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
