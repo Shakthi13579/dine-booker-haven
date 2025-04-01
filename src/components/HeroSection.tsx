@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="relative h-[80vh] overflow-hidden">
       <div 
@@ -26,7 +29,7 @@ const HeroSection: React.FC = () => {
             <Button 
               size="lg" 
               className="bg-restaurant-600 hover:bg-restaurant-700 text-white"
-              onClick={() => window.location.href = '/restaurants'}
+              onClick={() => navigate('/restaurants')}
             >
               Find Restaurants
             </Button>
@@ -34,6 +37,7 @@ const HeroSection: React.FC = () => {
               variant="outline" 
               size="lg"
               className="bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white/20"
+              onClick={() => navigate('/special-offers')}
             >
               View Special Offers
             </Button>
