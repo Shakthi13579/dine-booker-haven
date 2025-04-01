@@ -23,8 +23,8 @@ export async function getConnection() {
 export async function query<T>(sql: string, params?: any[]): Promise<T> {
   try {
     const conn = await getConnection();
-    const [results] = await conn.execute<T>(sql, params);
-    return results;
+    const [results] = await conn.execute(sql, params);
+    return results as T;
   } catch (error) {
     console.error('Database query error:', error);
     throw error;
